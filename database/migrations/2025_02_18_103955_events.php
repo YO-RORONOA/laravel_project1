@@ -15,12 +15,12 @@ class Events extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('club_id')->constrained()->onDelete('cascade'); // Foreign key to clubs table
             $table->string('title');
-            $table->text('description');
-            $table->timestamp('date');
-            $table->string('location');
-            $table->integer('max_capacity');
+            $table->text('description')->nullable();
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->unsignedBigInteger('club_id'); 
+            $table->foreign('club_id')->references('id')->on('clubs')->onDelete('cascade');
             $table->timestamps();
         });
     }

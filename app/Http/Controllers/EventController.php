@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Event;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index',compact('users'));
+        $event = Event::all();
+        return view('events.index', compact('event'));
     }
 
     /**
@@ -26,8 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        
-        return view('users.create');
+        return view('events.create');
     }
 
     /**
@@ -39,18 +37,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'club_id' => 'required|exists:clubs,id',
         ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        Event::create($request->all());
+        return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
 
     /**
@@ -59,9 +53,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($event)
     {
-        //
+        return view('events.show', compact('event'));
+
     }
 
     /**
