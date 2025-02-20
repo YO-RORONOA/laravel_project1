@@ -14,8 +14,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $event = Event::all();
-        return view('events.index', compact('event'));
+        $events = Event::paginate(10);
+        return view('events.index', compact('events'));
     }
 
     /**
@@ -53,9 +53,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($event)
+    public function show($events)
     {
-        return view('events.show', compact('event'));
+        return view('events.show', compact('events'));
 
     }
 

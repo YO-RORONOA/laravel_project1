@@ -47,6 +47,6 @@
     </table>
 
     <!-- Pagination -->
-    {{ $events->links() }}
+    <!-- {{ $events->links() }} -->
 </div>
 @endsection
