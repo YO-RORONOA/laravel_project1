@@ -1,52 +1,46 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Events</h1>
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Events</h1>
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    <a href="{{ route('events.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Create Event
+    </a>
 
-    <!-- Create New Event Button -->
-    <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Create Event</a>
-
-    <!-- Events Table -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Club</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($events as $event)
-                <tr>
-                    <td>{{ $event->title }}</td>
-                    <td>{{ $event->club->name }}</td> <!-- Display club name -->
-                    <td>{{ $event->start_time }}</td>
-                    <td>{{ $event->end_time }}</td>
-                    <td>
-                        <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">View</a>
-                        <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
+    <div class="mt-6 bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-left text-gray-700 uppercase text-sm">
+                    <th class="px-6 py-3">Title</th>
+                    <th class="px-6 py-3">Start Time</th>
+                    <th class="px-6 py-3">End Time</th>
+                    <th class="px-6 py-3">Actions</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($events as $event)
+                    <tr class="border-b">
+                        <td class="px-6 py-4">{{ $event->title }}</td>
+                        <td class="px-6 py-4">{{ $event->start_time }}</td>
+                        <td class="px-6 py-4">{{ $event->end_time }}</td>
+                        <td class="px-6 py-4 flex space-x-2">
+                            <a href="{{ route('events.show', $event->id) }}" class="text-blue-500 hover:underline">View</a>
+                            <a href="{{ route('events.edit', $event->id) }}" class="text-yellow-500 hover:underline">Edit</a>
+                            <form action="{{ route('events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Pagination -->
-    <!-- {{ $events->links() }} -->
+    <div class="mt-4">
+        {{ $events->links() }}
+    </div>
 </div>
 @endsection

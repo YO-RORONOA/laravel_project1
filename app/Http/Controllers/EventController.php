@@ -65,9 +65,10 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Event $event)
     {
-        //
+        $clubs = clubs::all();
+        return view('events.edit', compact('event', 'clubs'));
     }
 
     /**
@@ -77,9 +78,20 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $event)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'club_id' => 'required|exists:clubs,id',
+        ]);
+
+        // Update event
+        $event->update($request->all());
+
+        return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
 
     /**
